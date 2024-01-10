@@ -36,9 +36,6 @@
             ctx.textAlign = "end";
             ctx.font = "0.9em Arial";
 
-        var spinning = false;
-        var showResult = false;
-
         const wheelTexts = [
             "Ja maat, trek die fluit",
             "Nee, degene rechts van je is de Sjaak",
@@ -52,6 +49,14 @@
             "Nee, Deze keer heb je pech"
         ];
         const colors = ["#FF5733", "#FFC300", "#DAF7A6", "#00BFFF", "#DA70D6", "#FF1493", "#8A2BE2", "#4B0082", "#FFA07A", "#00FA9A"];
+
+        function pickOption() {
+            let index = Math.floor(Math.random() * wheelTexts.length)
+            return {
+                index,
+                text: wheelTexts[index]
+            };
+        }
 
         function drawWheel() {            
             var radius = canvas.width / 2 - 14;
@@ -84,21 +89,26 @@
             }
         }
 
+        var spinning = false; // Prevent the event from triggering while the wheel is still spinning
+        var initialAngle = 0; // Keep track of the angle across spins
         function spinWheel() {
+            const segmentArc = 2 * Math.PI / wheelTexts.length // the length of a single segment in radials
+            const spins = 5;
+            const duration = 3000;
+
             if (!spinning) {
                 spinning = true;
-                showResult = false;
-                var spins = 4;
-                var duration = 3000;
 
-                var initialAngle = 0;
-                var targetAngle = spins * 2 * Math.PI + Math.floor(Math.random() * (2 * Math.PI));
+                let target = pickOption();
+                let targetAngle = (spins * 2 * Math.PI) - (target.index + Math.random()) * segmentArc;
+                console.log("Target angle: " + targetAngle)
 
-                var startTime = performance.now();
+                let startTime = performance.now();
 
                 function animateWheel(currentTime) {
-                    var elapsedTime = currentTime - startTime;
-                    var progress = elapsedTime / duration;
+                    console.log("Animation Frame");
+                    let elapsedTime = currentTime - startTime;
+                    let progress = elapsedTime / duration;
 
                     if (progress < 1) {
                         var currentAngle = initialAngle + (targetAngle - initialAngle) * progress;
@@ -106,8 +116,9 @@
                         requestAnimationFrame(animateWheel);
                     } else {
                         spinning = false;
-                        showResult = true;
+                        // initialAngle = targetAngle;
                         drawWheelAtAngle(targetAngle);
+                        showResult(target.text);
                     }
                 }
 
@@ -123,13 +134,21 @@
             ctx.translate(-canvas.width / 2, -canvas.height / 2);
             drawWheel();
             ctx.restore();
+        }
 
-            if (showResult) {
-                var sliceAngle = 2 * Math.PI / wheelTexts.length;
-                var normalizedAngle = (2 * Math.PI - angle % (2 * Math.PI)) % (2 * Math.PI);
-                var selectedIndex = Math.floor(normalizedAngle / sliceAngle);
-                var selectedText = wheelTexts[selectedIndex];
-                document.getElementById("result").innerText = selectedText;
+        function showResult(text) {
+            document.getElementById("result").innerText = text;
+        }
+
+        function checkProbabilities(n) {
+            let counts = wheelTexts.map(_ => 0);
+            for (let i = 0; i < n; i++) {
+                let {index, _} = pickOption();
+                counts[index]++;
+            }
+
+            for (let i = 0; i < wheelTexts.length; i++) {
+                console.log(wheelTexts[i] + " : " + counts[i])
             }
         }
 

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riet Ad Rad</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+
+        #canvasContainer {
+            position: relative;
+            width: 800px;
+            height: 800px;
+            margin: 20px auto;
+        }
+
+        #spinnerButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Riet Ad Rad</h1>
+
+    <div id="canvasContainer">
+        <canvas id="wheelCanvas" width="800" height="800"></canvas>
+    </div>
+
+    <button id="spinnerButton" onclick="spinWheel()">Draai het rad</button>
+
+    <div id="result"></div>
+
+    <script>
+        var canvas = document.getElementById("wheelCanvas");
+        var ctx = canvas.getContext("2d");
+        var wheelTexts = [
+            "Ja maat, trek die fluit",
+            "Nee, degene rechts van je is de Sjaak",
+            "Nee, trek er twee",
+            "Ja, maak die bak soldaat",
+            "Doe met degene links van je een blaaspijp",
+            "Nee, je wordt dit keer gespaard",
+            "Ja, Wees geen miet, vouw hem met riet",
+            "Nee, deel er ééntje uit",
+            "Nee, Maarten neemt deze voor je",
+            "Nee, Deze keer heb je pech"
+        ];
+        var spinning = false;
+        var showResult = false;
+
+        function drawWheel() {
+            var colors = ["#FF5733", "#FFC300", "#DAF7A6", "#00BFFF", "#DA70D6", "#FF1493", "#8A2BE2", "#4B0082", "#FFA07A", "#00FA9A"];
+            var radius = 300;
+            var centerX = canvas.width / 2;
+            var centerY = canvas.height / 2;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (var i = 0; i < wheelTexts.length; i++) {
+                var angle = (2 * Math.PI / wheelTexts.length) * i;
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, angle, angle + (2 * Math.PI / wheelTexts.length));
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(angle + (2 * Math.PI / wheelTexts.length) / 2);
+                ctx.fillStyle = "white";
+                ctx.font = "12px Arial";
+                ctx.fillText(wheelTexts[i], radius - 250, 5);  // Adjusted text position
+                ctx.restore();
+            }
+        }
+
+        function spinWheel() {
+            if (!spinning) {
+                spinning = true;
+                showResult = false;
+                var spins = 4;
+                var duration = 3000;
+
+                var initialAngle = 0;
+                var targetAngle = spins * 2 * Math.PI + Math.floor(Math.random() * (2 * Math.PI));
+
+                var startTime = performance.now();
+
+                function animateWheel(currentTime) {
+                    var elapsedTime = currentTime - startTime;
+                    var progress = elapsedTime / duration;
+
+                    if (progress < 1) {
+                        var currentAngle = initialAngle + (targetAngle - initialAngle) * progress;
+                        drawWheelAtAngle(currentAngle);
+                        requestAnimationFrame(animateWheel);
+                    } else {
+                        spinning = false;
+                        showResult = true;
+                        drawWheelAtAngle(targetAngle);
+                    }
+                }
+
+                requestAnimationFrame(animateWheel);
+            }
+        }
+
+        function drawWheelAtAngle(angle) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate(angle);
+            ctx.translate(-canvas.width / 2, -canvas.height / 2);
+            drawWheel();
+            ctx.restore();
+
+            if (showResult) {
+                var sliceAngle = 2 * Math.PI / wheelTexts.length;
+                var normalizedAngle = (2 * Math.PI - angle % (2 * Math.PI)) % (2 * Math.PI);
+                var selectedIndex = Math.floor(normalizedAngle / sliceAngle);
+                var selectedText = wheelTexts[selectedIndex];
+                document.getElementById("result").innerText = "Selected Text: " + selectedText;
+            }
+        }
+
+        // Initial draw
+        drawWheel();
+    </script>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,17 +30,20 @@
         }
     </style>
 </head>
+
 <body>
+    <div class="main">
 
-    <h1>Riet Ad Rad</h1>
+        <h1>Riet Ad Rad</h1>
 
-    <div id="canvasContainer">
-        <canvas id="wheelCanvas" width="800" height="800"></canvas>
+        <div id="canvasContainer">
+            <canvas id="wheelCanvas" width="800" height="800"></canvas>
+        </div>
+
+        <button id="spinnerButton" onclick="spinWheel()">Draai het rad</button>
+
+        <div id="result"></div>
     </div>
-
-    <button id="spinnerButton" onclick="spinWheel()">Draai het rad</button>
-
-    <div id="result"></div>
 
     <script>
         var canvas = document.getElementById("wheelCanvas");
@@ -140,4 +144,5 @@
     </script>
 
 </body>
+
 </html>

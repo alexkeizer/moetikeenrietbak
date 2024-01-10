@@ -31,8 +31,8 @@
         var canvas = document.getElementById("wheelCanvas");
 
         var ctx = canvas.getContext("2d");
-            ctx.textAlign = "end";
-            ctx.font = "0.9em Arial";
+        ctx.textAlign = "end";
+        ctx.font = "0.9em Arial";
 
         const wheelTexts = [
             "Ja maat, trek die fluit",
@@ -114,7 +114,7 @@
                         requestAnimationFrame(animateWheel);
                     } else {
                         spinning = false;
-                        // initialAngle = targetAngle;
+                        initialAngle = targetAngle % (2 * Math.PI);
                         drawWheelAtAngle(targetAngle);
                         showResult(target.text);
                     }

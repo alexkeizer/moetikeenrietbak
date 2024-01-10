@@ -15,11 +15,12 @@
 
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-12 col-md-8">
+                <div class="col-12 col-md-8 canvasContainer">
                     <canvas id="wheelCanvas" width="800" height="800"></canvas>
+                    <div class="triangle"></div>
                 </div>
             </div>
-            <div>
+            <div class="mt-4">
                 <button class="btn btn-lg btn-primary" id="spinnerButton" onclick="spinWheel()">
                     Moet ik een rietbak?
                 </button>
@@ -30,8 +31,15 @@
 
     <script>
         var canvas = document.getElementById("wheelCanvas");
+
         var ctx = canvas.getContext("2d");
-        var wheelTexts = [
+            ctx.textAlign = "end";
+            ctx.font = "0.9em Arial";
+
+        var spinning = false;
+        var showResult = false;
+
+        const wheelTexts = [
             "Ja maat, trek die fluit",
             "Nee, degene rechts van je is de Sjaak",
             "Nee, trek er twee",
@@ -43,18 +51,20 @@
             "Nee, Maarten neemt deze voor je",
             "Nee, Deze keer heb je pech"
         ];
-        var spinning = false;
-        var showResult = false;
+        const colors = ["#FF5733", "#FFC300", "#DAF7A6", "#00BFFF", "#DA70D6", "#FF1493", "#8A2BE2", "#4B0082", "#FFA07A", "#00FA9A"];
 
-        function drawWheel() {
-            var colors = ["#FF5733", "#FFC300", "#DAF7A6", "#00BFFF", "#DA70D6", "#FF1493", "#8A2BE2", "#4B0082", "#FFA07A", "#00FA9A"];
-            var radius = canvas.width * 3 / 8;
+        function drawWheel() {            
+            var radius = canvas.width / 2 - 14;
             var centerX = canvas.width / 2;
             var centerY = canvas.height / 2;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.textAlign = "end";
-            ctx.font = "0.9em Arial";
+
+            let circle = new Path2D();
+            circle.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = '#000000';
+            ctx.stroke(circle);
 
             for (var i = 0; i < wheelTexts.length; i++) {
                 var angle = (2 * Math.PI / wheelTexts.length) * i;

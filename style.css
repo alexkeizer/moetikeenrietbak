@@ -4,16 +4,29 @@ body {
 }
 
 .main {
-    margin-top: 2em
+    margin: 2em 1em
 }
 
-#canvasContainer {
+.triangle {
+    position: absolute;
+    width: 0;
+    height: 0;
+
+    top: 50%;
+    right: 0;
+
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent; 
+
+    border-right : 24px solid red;
+}
+
+.canvasContainer {
     position: relative;
-    margin: 20px auto;
 }
 
 #wheelCanvas {
-    width: 95%;
+    width: 97%;
 }
 
 #result {

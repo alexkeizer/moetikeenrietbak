@@ -1,20 +1,19 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    margin: 50px;
+}
+
+.main {
+    margin-top: 2em
 }
 
 #canvasContainer {
     position: relative;
-    width: 800px;
-    height: 800px;
     margin: 20px auto;
 }
 
-#spinnerButton {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+#wheelCanvas {
+    width: 95%;
 }
 
 #result {

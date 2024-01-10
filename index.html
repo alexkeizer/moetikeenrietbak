@@ -16,7 +16,6 @@
         <div class="container">
             <div class="canvasContainer">
                 <canvas id="wheelCanvas" width="800" height="800"></canvas>
-                <div class="triangle"></div>
             </div>
             <div class="mt-4">
                 <button class="btn btn-lg btn-primary" id="spinnerButton" onclick="spinWheel()">
@@ -56,12 +55,16 @@
             };
         }
 
-        function drawWheel() {            
-            var radius = canvas.width / 2 - 14;
-            var centerX = canvas.width / 2;
-            var centerY = canvas.height / 2;
+        function dimensions() {
+            return {
+                radius: canvas.width / 2 - 24,
+                centerX: canvas.width / 2,
+                centerY: canvas.height / 2,
+            }
+        }
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function drawWheel() {
+            let {radius, centerX, centerY} = dimensions();
 
             let circle = new Path2D();
             circle.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
@@ -124,8 +127,26 @@
             }
         }
 
+        function drawTriangle() {
+            const triangleLength = 48;
+            const triangleOverlap = 4; // How much the triangle overlaps with the circle
+            const triangleHeight = 24;
+            let {radius, centerX, centerY} = dimensions();
+
+            let triangle = new Path2D();
+            let trianglePointX = centerX + radius - triangleOverlap;
+            triangle.moveTo(trianglePointX, centerY);
+            triangle.lineTo(trianglePointX + triangleLength, centerY + (triangleHeight / 2));
+            triangle.lineTo(trianglePointX + triangleLength, centerY - (triangleHeight / 2));
+            ctx.fillStyle = "red";
+            ctx.fill(triangle);
+        }
+
         function drawWheelAtAngle(angle) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawTriangle();
+
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);
             ctx.rotate(angle);
@@ -151,7 +172,7 @@
         }
 
         // Initial draw
-        drawWheel();
+        drawWheelAtAngle(0);
     </script>
 
 </body>
